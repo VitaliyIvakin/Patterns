@@ -1,0 +1,22 @@
+public class Logger 
+{
+    static LogSetting__mdt log = LogSetting__mdt.getInstance('Log');
+    public static void logInfo(string message)
+    {
+        if(log.LogEnabled__c){
+            System.debug(LoggingLevel.INFO, message);
+        }
+    }
+    public static void logWarn(string message)
+    {
+        if(log.LogEnabled__c){
+            System.debug(LoggingLevel.WARN, message);
+        }
+    }
+    public static void logError(string message)
+    {
+        if(log.LogEnabled__c){
+            System.debug(LoggingLevel.ERROR, message);
+        }
+    }
+}
