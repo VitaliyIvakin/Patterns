@@ -1,5 +1,6 @@
 // Jest Apex wire adapter
 import { createElement } from 'lwc';
+import { setImmediate } from 'timers';
 import jestDemoComponent from 'c/JestDemo';
 import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';
 import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';
@@ -60,7 +61,9 @@ describe('testing jestDemoComponent suit', () => {
 
         // Wait for any asynchronous DOM updates
         await flushPromises();
-
+        
+        // or use
+        // return new Promise(setImmediate).then(()=>{ 
         const divs = testingComponent.shadowRoot.querySelectorAll('.accountItem');
         const divsTextContextArrray = Array.from(divs).map(p => p.textContent);
         expect(divsTextContextArrray.length).toBe(4);
