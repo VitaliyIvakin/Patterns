@@ -1,12 +1,13 @@
 // Jest Apex wire adapter
 import { createElement } from 'lwc';
 import jestDemoComponent from 'c/JestDemo';
-import getAccountList from '@salesforce/apex/AccountController.getAccountList';
+import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';
+import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';
 
-const mockGetAccountList = require('./data/getAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
-const mockGetAccountListNoRecords = require('./data/getAccountListNoRecords.json'); // contains empty array []
+const mockGetAccountList = require('./data/mockAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
+const mockGetAccountListNoRecords = require('./data/mockAccountListNoRecords.json'); // contains empty array []
 
-jest.mock('@salesforce/apex/AccountController.getAccountList', () => {
+jest.mock('@salesforce/apex/AccountController.getAccountListForWire', () => {
     const { createApexTestWireAdapter } = require('@salesforce/sfdx-lwc-jest');
     return {
         default: createApexTestWireAdapter(jest.fn())
@@ -15,7 +16,13 @@ jest.mock('@salesforce/apex/AccountController.getAccountList', () => {
     { virtual: true }
 );
 
-describe('getAccountList using Apex wire adapter', () => {
+jest.mock('@salesforce/apex/AccountController.getAccountListForImperative', () => ({
+    default: jest.fn()
+}),
+    { virtual: true }
+);
+
+describe('testing jestDemoComponent suit', () => {
 
     beforeEach(() => {
         const testingComponent = createElement('c-jest-demo', {
@@ -40,7 +47,8 @@ describe('getAccountList using Apex wire adapter', () => {
     test('positive with records', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.emit(mockGetAccountList);
+        getAccountListForWire.emit(mockGetAccountList);    //using Apex wire adapter
+        getAccountListForImperative.mockResolvedValue(mockGetAccountList);    // using imperative call
 
         // Wait for any asynchronous DOM updates
         await flushPromises();
@@ -55,8 +63,9 @@ describe('getAccountList using Apex wire adapter', () => {
     test('positive no items when no records are returned ', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.emit(mockGetAccountListNoRecords);
-
+        getAccountListForWire.emit(mockGetAccountListNoRecords);    //using Apex wire adapter
+        getAccountListForImperative.mockResolvedValue(mockGetAccountListNoRecords);    // using imperative call
+            
         // Wait for any asynchronous DOM updates
         await flushPromises();
 
@@ -68,8 +77,9 @@ describe('getAccountList using Apex wire adapter', () => {
     test('negative @wire error', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.error();
-
+        getAccountListForWire.error();    //using Apex wire adapter
+        getAccountListForImperative.mockRejectedValue();    // using imperative call
+        
         // Wait for any asynchronous DOM updates
         await flushPromises();
 
