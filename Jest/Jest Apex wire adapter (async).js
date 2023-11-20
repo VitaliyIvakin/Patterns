@@ -7,6 +7,14 @@ import getAccountListForImperative from '@salesforce/apex/AccountController.getA
 const mockGetAccountList = require('./data/mockAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
 const mockGetAccountListNoRecords = require('./data/mockAccountListNoRecords.json'); // contains empty array []
 
+// Sample error for imperative Apex call
+const APEX_CONTACTS_ERROR = {
+    body: { message: 'An internal server error has occurred' },
+    ok: false,
+    status: 400,
+    statusText: 'Bad Request'
+};
+
 jest.mock('@salesforce/apex/AccountController.getAccountListForWire', () => {
     const { createApexTestWireAdapter } = require('@salesforce/sfdx-lwc-jest');
     return {
@@ -78,7 +86,7 @@ describe('testing jestDemoComponent suit', () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
         getAccountListForWire.error();    //using Apex wire adapter
-        getAccountListForImperative.mockRejectedValue();    // using imperative call
+        getAccountListForImperative.mockRejectedValue(APEX_CONTACTS_ERROR);    // using imperative call
         
         // Wait for any asynchronous DOM updates
         await flushPromises();
