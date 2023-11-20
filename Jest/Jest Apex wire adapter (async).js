@@ -62,8 +62,8 @@ describe('testing jestDemoComponent suit', () => {
         // Wait for any asynchronous DOM updates
         await flushPromises();
         
-        // or use
-        // return new Promise(setImmediate).then(()=>{ 
+        // or its better to use
+        // return new Promise(setImmediate).then(() => {
         const divs = testingComponent.shadowRoot.querySelectorAll('.accountItem');
         const divsTextContextArrray = Array.from(divs).map(p => p.textContent);
         expect(divsTextContextArrray.length).toBe(4);
@@ -79,6 +79,9 @@ describe('testing jestDemoComponent suit', () => {
             
         // Wait for any asynchronous DOM updates
         await flushPromises();
+        
+        // or its better to use
+        // return new Promise(setImmediate).then(() => {
 
         const accountElements = testingComponent.shadowRoot.querySelectorAll('.accountItem');
         expect(accountElements.length).toBe(mockGetAccountListNoRecords.length);
@@ -93,6 +96,9 @@ describe('testing jestDemoComponent suit', () => {
         
         // Wait for any asynchronous DOM updates
         await flushPromises();
+        
+        // or its better to use
+        // return new Promise(setImmediate).then(() => {
 
         const errorElement = testingComponent.shadowRoot.querySelector('.errorElement');
         expect(errorElement).not.toBeNull();
