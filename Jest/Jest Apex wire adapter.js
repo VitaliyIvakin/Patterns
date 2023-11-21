@@ -9,7 +9,7 @@
 
 import { createElement } from 'lwc';
 import { setImmediate } from 'timers';
-import jestDemoComponent from 'c/JestDemo';
+import jestDemoComponent from 'c/JestDemo';	// testing component
 import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';		// for using Apex wire adapter
 import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';	// for imperative calls
 import { getRecord } from 'lightning/uiRecordApi';	// for using LDS
