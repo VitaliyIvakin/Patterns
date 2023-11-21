@@ -2,12 +2,21 @@
 import { createElement } from 'lwc';
 import { setImmediate } from 'timers';
 import jestDemoComponent from 'c/JestDemo';
-import getAccountList from '@salesforce/apex/AccountController.getAccountList';
+import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';
+import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';
 
-const mockGetAccountList = require('./data/getAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
-const mockGetAccountListNoRecords = require('./data/getAccountListNoRecords.json'); // contains empty array []
+const mockGetAccountList = require('./data/mockAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
+const mockGetAccountListNoRecords = require('./data/mockAccountListNoRecords.json'); // contains empty array []
 
-jest.mock('@salesforce/apex/AccountController.getAccountList', () => {
+// Sample error for imperative Apex call
+const APEX_CONTACTS_ERROR = {
+    body: { message: 'An internal server error has occurred' },
+    ok: false,
+    status: 400,
+    statusText: 'Bad Request'
+};
+
+jest.mock('@salesforce/apex/AccountController.getAccountListForWire', () => {
     const { createApexTestWireAdapter } = require('@salesforce/sfdx-lwc-jest');
     return {
         default: createApexTestWireAdapter(jest.fn())
@@ -16,9 +25,16 @@ jest.mock('@salesforce/apex/AccountController.getAccountList', () => {
     { virtual: true }
 );
 
-describe('getAccountList using Apex wire adapter', () => {
+jest.mock('@salesforce/apex/AccountController.getAccountListForImperative', () => ({
+    default: jest.fn()
+}),
+    { virtual: true }
+);
+
+describe('testing jestDemoComponent suit', () => {
 
     beforeEach(() => {
+        getAccountListForImperative.mockResolvedValue(mockGetAccountList);  // if we call it in connectedcallback()
         const testingComponent = createElement('c-jest-demo', {
             is: jestDemoComponent
         });
@@ -32,10 +48,12 @@ describe('getAccountList using Apex wire adapter', () => {
         jest.clearAllMocks();
     });
 
-    test('positive with records', () => {
+    test('positive with records', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.emit(mockGetAccountList);
+        getAccountListForWire.emit(mockGetAccountList);    //using Apex wire adapter
+        // or
+        getAccountListForImperative.mockResolvedValue(mockGetAccountList);    // using imperative call
 
         return new Promise(setImmediate).then(() => {
             const divs = testingComponent.shadowRoot.querySelectorAll('.accountItem');
@@ -43,25 +61,30 @@ describe('getAccountList using Apex wire adapter', () => {
             expect(divsTextContextArrray.length).toBe(4);
             expect(divsTextContextArrray).toEqual(['Test Name1', 'Test Name2', 'Test Name3', 'Test Name4']);
         });
-
     });
 
-    test('positive no items when no records are returned ', () => {
+    test('positive no items when no records are returned ', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.emit(mockGetAccountListNoRecords);
+        getAccountListForWire.emit(mockGetAccountListNoRecords);    //using Apex wire adapter
+        // or
+        getAccountListForImperative.mockResolvedValue(mockGetAccountListNoRecords);    // using imperative call by event
+
+        const button = testingComponent.shadowRoot.querySelector('lightning-button');
+		button.dispatchEvent(new CustomEvent('click'));     //button.click()
 
         return new Promise(setImmediate).then(() => {
             const accountElements = testingComponent.shadowRoot.querySelectorAll('.accountItem');
             expect(accountElements.length).toBe(mockGetAccountListNoRecords.length);
         });
-
     });
 
-    test('negative @wire error', () => {
+    test('negative @wire error', async () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
-        getAccountList.error();
+        getAccountListForWire.error();    //using Apex wire adapter
+        // or
+        getAccountListForImperative.mockRejectedValue(APEX_CONTACTS_ERROR);    // using imperative call
 
         return new Promise(setImmediate).then(() => {
             const errorElement = testingComponent.shadowRoot.querySelector('.errorElement');
