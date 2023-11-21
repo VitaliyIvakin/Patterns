@@ -1,4 +1,13 @@
 // Jest Apex wire adapter
+// to use stub, add line in jest.config.js to the property moduleNameMapper with path to your stub component (in ^...$ format). 
+// Ex.1:
+//moduleNameMapper: {
+//     '^yourNamespaceName/componentName$': '<rootDir>/force-app/test/jest-mocks/yourNamespaceName/componentName',
+// create '/force-app/test/jest-mocks' folder + basic component in '/force-app/test/jest-mocks/yourNamespaceName/componentName' folder
+// Ex.2: (for the stun it the same namespace)
+// moduleNameMapper: { '^c/displayPanel$': '<rootDir>/force-app/test/jest-mocks/c/displayPanel' }
+// for created <c-display-panel> stub component in folder '/force-app/test/jest-mocks/c/displayPanel/ 
+
 import { createElement } from 'lwc';
 import { setImmediate } from 'timers';
 import jestDemoComponent from 'c/JestDemo';
