@@ -10,11 +10,13 @@
 import { createElement } from 'lwc';
 import { setImmediate } from 'timers';
 import jestDemoComponent from 'c/JestDemo';
-import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';
-import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';
+import getAccountListForWire from '@salesforce/apex/AccountController.getAccountListForWire';		// for using Apex wire adapter
+import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';	// for imperative calls
+import { getRecord } from 'lightning/uiRecordApi';	// for using LDS
 
 const mockGetAccountList = require('./data/mockAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
 const mockGetAccountListNoRecords = [];
+const mockGetRecord = require('./data/getRecord.json');		// for using LDS
 
 // Sample error for imperative Apex call
 const APEX_CONTACTS_ERROR = {
@@ -56,12 +58,14 @@ describe('testing jestDemoComponent suit', () => {
         jest.clearAllMocks();
     });
 
-    test('positive with records', async () => {
+    test('positive with records', () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
         getAccountListForWire.emit(mockGetAccountList);    //using Apex wire adapter
         // or
         getAccountListForImperative.mockResolvedValue(mockGetAccountList);    // using imperative call
+	//or
+	getRecord.emit(mockGetRecord);	// using LDS
 
         return new Promise(setImmediate).then(() => {
             const divs = testingComponent.shadowRoot.querySelectorAll('.accountItem');
@@ -71,7 +75,7 @@ describe('testing jestDemoComponent suit', () => {
         });
     });
 
-    test('positive no items when no records are returned ', async () => {
+    test('positive no items when no records are returned ', () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
         getAccountListForWire.emit(mockGetAccountListNoRecords);    //using Apex wire adapter
@@ -87,7 +91,7 @@ describe('testing jestDemoComponent suit', () => {
         });
     });
 
-    test('negative @wire error', async () => {
+    test('negative @wire error', () => {
         const testingComponent = document.querySelector('c-jest-demo');
 
         getAccountListForWire.error();    //using Apex wire adapter
