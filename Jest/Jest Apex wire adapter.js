@@ -57,7 +57,7 @@ describe('testing jestDemoComponent suit', () => {
 
         return new Promise(setImmediate).then(() => {
             const divs = testingComponent.shadowRoot.querySelectorAll('.accountItem');
-            const divsTextContextArrray = Array.from(divs).map(p => p.textContent);
+            const divsTextContextArrray = Array.from(divs).map(elem => elem.textContent);
             expect(divsTextContextArrray.length).toBe(4);
             expect(divsTextContextArrray).toEqual(['Test Name1', 'Test Name2', 'Test Name3', 'Test Name4']);
         });
