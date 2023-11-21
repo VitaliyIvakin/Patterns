@@ -1,5 +1,4 @@
-// Jest Apex wire adapter
-// to use stub, add line in jest.config.js to the property moduleNameMapper with path to your stub component (in ^...$ format). 
+// to use stub components, add line in jest.config.js to the property moduleNameMapper with name (in ^...$ format) and path to your stub component. 
 // Ex.1:
 //moduleNameMapper: {
 //     '^yourNamespaceName/componentName$': '<rootDir>/force-app/test/jest-mocks/yourNamespaceName/componentName',
