@@ -6,7 +6,7 @@ import getAccountListForWire from '@salesforce/apex/AccountController.getAccount
 import getAccountListForImperative from '@salesforce/apex/AccountController.getAccountListForImperative';
 
 const mockGetAccountList = require('./data/mockAccountList.json');   //contains array of objects [{"Id":"001", "Name": "Acc name"}, {}...]
-const mockGetAccountListNoRecords = require('./data/mockAccountListNoRecords.json'); // contains empty array []
+const mockGetAccountListNoRecords = [];
 
 // Sample error for imperative Apex call
 const APEX_CONTACTS_ERROR = {
