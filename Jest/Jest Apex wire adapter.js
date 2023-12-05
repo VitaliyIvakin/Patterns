@@ -83,7 +83,7 @@ describe('testing jestDemoComponent suit', () => {
         getAccountListForImperative.mockResolvedValue(mockGetAccountListNoRecords);    // using imperative call by event
 
         const button = testingComponent.shadowRoot.querySelector('lightning-button');
-		button.dispatchEvent(new CustomEvent('click'));     //button.click()
+	button.dispatchEvent(new CustomEvent('click'));     //button.click()
 
         return new Promise(setImmediate).then(() => {
             const accountElements = testingComponent.shadowRoot.querySelectorAll('.accountItem');
