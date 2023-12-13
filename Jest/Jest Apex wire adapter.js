@@ -3,7 +3,7 @@
 //moduleNameMapper: {
 //     '^yourNamespaceName/componentName$': '<rootDir>/force-app/test/jest-mocks/yourNamespaceName/componentName',
 // create '/force-app/test/jest-mocks' folder + basic component in '/force-app/test/jest-mocks/yourNamespaceName/componentName' folder
-// Ex.2: (for the stun it the same namespace)
+// Ex.2: (for the stub it the same namespace)
 // moduleNameMapper: { '^c/displayPanel$': '<rootDir>/force-app/test/jest-mocks/c/displayPanel' }
 // for created <c-display-panel> stub component in folder '/force-app/test/jest-mocks/c/displayPanel/ 
 
