@@ -23,7 +23,7 @@ public inherited sharing class AccountSelector extends fflib_SObjectSelector {
     }
 
     public List<Account> selectById(Set<Id> idSet){
-	    return (List<Account>) selectSObjectsById(idSet);
-	}
+        return (List<Account>) selectSObjectsById(idSet);
+    }
   
 }
