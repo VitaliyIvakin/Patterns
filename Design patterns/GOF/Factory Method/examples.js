@@ -36,7 +36,8 @@ if (concreteProduct instanceof Furniture) {
 
 
 ///// The idea is to use object as a map of classes///////
-///// bare logic /////
+///// in fact classes well be functions of the map-object ////////
+
 ///// using classes /////
 class Chair {
   getParams(){
