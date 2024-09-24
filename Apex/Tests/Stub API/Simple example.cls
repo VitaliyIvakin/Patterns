@@ -21,8 +21,8 @@ class ConsumerTest {
             List<String> listOfParamNames, 
         	List<Object> listOfArgs
         ) {
-            System.debug(stubbedObject);
-            if (stubbedMethodName == 'doSomething') {
+            if (stubbedObject instanceof Injection
+            && stubbedMethodName == 'doSomething') {                    
                 return 'stubbed doSomething()';
             }
             return null;
